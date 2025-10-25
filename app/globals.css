@@ -2,7 +2,7 @@
 
 :root {
   --background: #ffffff;
-  --container: #111111;
+  --container: #e0e0e0;
   --foreground: #171717;
 }
 
@@ -16,6 +16,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
+    --container: #1a1a1a;
     --foreground: #ededed;
   }
 }
@@ -83,4 +84,18 @@ body {
   margin: 0.5em auto;
   outline: none;
   padding: 1em;
+}
+
+button {
+  border-radius: 0.5rem;
+  background-color: var(--container);
+  padding: 0.5rem 1rem;
+  color: var(--foreground);
+  cursor: pointer;
+  transition: background-color 0.1s, color 0.3s;
+}
+
+button:hover {
+  background-color: var(--foreground);
+  color: var(--background);
 }
