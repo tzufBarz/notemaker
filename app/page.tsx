@@ -1,5 +1,5 @@
-import EditorClient from "./EditorClient";
+import LoginPage from "./login";
 
 export default function Home() {
-    return <EditorClient />;
+    return <LoginPage />;
 }

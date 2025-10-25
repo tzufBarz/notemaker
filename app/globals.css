@@ -39,10 +39,8 @@ body {
 .ProseMirror li {
   position: relative;
   text-align: inherit;
-  margin-left: 1.5em;
-  margin-right: 1.5em;
-  padding-left: 0.5em;
-  padding-right: 0.5em;
+  margin-inline-start: 1em;
+  padding-inline-start: 0.5em;
 }
 
 .ProseMirror ul > li::before {
@@ -70,16 +68,19 @@ body {
   transform: translate(-100%);
 }
 
-.ProseMirror ol > li[dir="rtl"]::before {
-  content: counter(list-counter) ".";
-  left: initial;
+.ProseMirror li[dir="rtl"]::before {
   right: 0;
+  left: initial;
   transform: translate(100%);
 }
 
+.ProseMirror ol > li[dir="rtl"]::before {
+  content: counter(list-counter) ".";
+}
+
 .ProseMirror {
-  width: 80%;
+  width: 50%;
   margin: 0.5em auto;
   outline: none;
-  padding: 0.25em 1em;
+  padding: 1em;
 }
