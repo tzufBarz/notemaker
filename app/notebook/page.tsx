@@ -1,12 +1,12 @@
 'use client';
 
-import { createRef, JSX, RefObject, useCallback, useEffect, useState } from 'react';
+import { createRef, JSX, RefObject, Suspense, useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import styles from './Notebook.module.css';
 import { Note } from '../note/Note';
 import { useSearchParams } from 'next/navigation';
 
-export default function NotebookPage() {
+export function NotebookPage() {
     const [notes, setNotes] = useState<JSX.Element[]>([]);
     const [noteRefs, setNoteRefs] = useState<React.RefObject<{handleSave: () => void} | null>[]>([]);
 
@@ -29,6 +29,7 @@ export default function NotebookPage() {
             .select('id')
             .eq('notebook', id)
             .order('date')
+            .order('id')
             .then(({ data, error }) => {
                 if (error) console.error(error);
                 else if (data) {
@@ -66,4 +67,9 @@ export default function NotebookPage() {
             <button className={styles.insertButton} onClick={addNewNote}>+ New Note</button>
         </div>
     </div>;
+}
+
+
+export default function NotebookPageRoute() {
+    return <Suspense><NotebookPage /></Suspense>
 }
