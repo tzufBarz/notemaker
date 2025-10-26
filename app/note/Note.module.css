@@ -38,8 +38,17 @@
     color: var(--foreground);
 }
 
-.saveButton {
+.deleteButton {
+    position: absolute;
+    top: 0.5em;
+    right: 0.5em;
+    font-size: 0.8em;
+    padding: 0.5em;
+    border-radius: 1em;
+}
+
+/* .saveButton {
     position: fixed;
     top: 1rem;
     left: 1rem;
-}
+} */

@@ -1,6 +1,6 @@
 'use client';
 
-import { createRef, JSX, useEffect, useState } from 'react';
+import { createRef, JSX, RefObject, useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import styles from './Notebook.module.css';
 import { Note } from '../note/Note';
@@ -12,6 +12,14 @@ export default function NotebookPage() {
 
     const id = useSearchParams().get('id');
     const [loading, setLoading] = useState(true);
+
+    const deleteNote = useCallback((ref: RefObject<{handleSave: () => void} | null>) => {
+        const index = noteRefs.indexOf(ref);
+
+        setNotes(prev => prev.filter((_, i) => i !== index));
+        setNoteRefs(prev => prev.filter((_, i) => i !== index));
+    }, [noteRefs])
+
 
     useEffect(() => {
         if (!id) return;
@@ -26,11 +34,11 @@ export default function NotebookPage() {
                 else if (data) {
                     const refs = data.map(() => createRef<{ handleSave: () => void }>());
                     setNoteRefs(refs);
-                    setNotes(data.map((note, i) => <Note key={note.id} id={note.id} ref={refs[i]} />));
+                    setNotes(data.map((note, i) => <Note key={note.id} id={note.id} ref={refs[i]} onDelete={deleteNote.bind(null, refs[i])} />));
                 }
                 setLoading(false);
             });
-    }, [id]);
+    }, [id, deleteNote]);
 
     const addNewNote = async () => {
         const { data, error } = await supabase.from('notes').insert({ notebook: id }).select('id').single();
@@ -44,9 +52,8 @@ export default function NotebookPage() {
         
         // Add the new Note component
         setNoteRefs(prev => [...prev, newRef]);
-        setNotes(prev => [...prev, <Note key={data.id} id={data.id} ref={newRef} />]);
+        setNotes(prev => [...prev, <Note key={data.id} id={data.id} ref={newRef} onDelete={deleteNote.bind(null, newRef)} />]);
     };
-
 
     if (loading) return <p>Loading notebook...</p>;
 

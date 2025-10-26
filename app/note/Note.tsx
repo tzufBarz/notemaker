@@ -1,18 +1,20 @@
 'use client';
 
-import { ChangeEvent, Dispatch, FocusEvent, forwardRef, SetStateAction, useEffect, useImperativeHandle, useState } from 'react';
+import { FocusEvent, ForwardedRef, forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import TextDirection from "tiptap-text-direction";
 import styles from "./Note.module.css";
+import { FaTrash } from 'react-icons/fa';
 
 type NoteProps = {
   id: number;
+  onDelete: VoidFunction
 }
 
 
-export const Note = forwardRef(({id}: NoteProps, ref) => {
+export const Note = forwardRef(({id, onDelete}: NoteProps, ref) => {
   const [date, setDate] = useState('');
 
   const [loading, setLoading] = useState(true);
@@ -85,7 +87,20 @@ export const Note = forwardRef(({id}: NoteProps, ref) => {
     })
   }
 
-  return <EditorContent className={styles.noteEditor} editor={editor}><input type={date} className={styles.dateSelector} defaultValue={date} onBlur={updateDate} /></EditorContent>;
+  const remove = async () => {
+    const { data, error } = await supabase.from('notes').delete().eq('id', id);
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    onDelete();
+  }
+
+  return <EditorContent className={styles.noteEditor} editor={editor}>
+    <input type={date} className={styles.dateSelector} defaultValue={date} onBlur={updateDate} />
+    {editor.isEmpty ? <button className={styles.deleteButton} onClick={remove}><FaTrash /></button> : <></>}
+  </EditorContent>;
 });
 
 Note.displayName = 'Note';
