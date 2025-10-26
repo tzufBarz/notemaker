@@ -1,17 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import TextDirection from "tiptap-text-direction";
-import styles from './NotePage.module.css';
 
 type NoteProps = {
   id: number;
 }
 
-export function NotePage({id}: NoteProps) {
+export const Note = forwardRef(({id}: NoteProps, ref) => {
   const [loading, setLoading] = useState(true);
 
   const editor = useEditor({
@@ -22,19 +21,21 @@ export function NotePage({id}: NoteProps) {
     immediatelyRender: false,
   });
 
-  const handleSave = () => {
+  useImperativeHandle(ref, () => ({
+    handleSave: () => {
       if (editor) {
-          const json = editor.getJSON();
-          console.log(json);
-          supabase.from('notes').update({ content: json }).eq('id', id).then(({ data, error }) => {
-              if (error) {
-                  console.error('Error saving note:', error);
-              } else {
-                  console.log('Note saved:', data);
-              }
-          });
+        const json = editor.getJSON();
+        console.log(json);
+        supabase.from('notes').update({ content: json }).eq('id', id).then(({ data, error }) => {
+          if (error) {
+            console.error('Error saving note:', error);
+          } else {
+            console.log('Note saved:', data);
+          }
+        });
       }
-  };
+    }
+  }));
 
   useEffect(() => {
     if (!id) return;
@@ -56,12 +57,7 @@ export function NotePage({id}: NoteProps) {
   if (loading) return <p>Loading note...</p>;
   if (!editor) return <p>Note not found</p>;
 
-  return (
-    <div className={styles.notePage}>
-      <div className={styles.saveButton}><button onClick={handleSave}>Save</button></div>
-      <div className={styles.noteEditor}>
-        <EditorContent editor={editor} />
-      </div>
-    </div>
-  );
-}
+  return <EditorContent editor={editor} />;
+});
+
+Note.displayName = 'Note';
