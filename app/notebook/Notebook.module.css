@@ -1,9 +1,15 @@
-.noteEditor {
-    
-}
-
-/* .saveButton {
+.saveButton {
     position: fixed;
     top: 1rem;
     left: 1rem;
-} */
+}
+
+.insertButton {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+}
+
+.notebook {
+    margin: 1em;
+}

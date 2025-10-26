@@ -1,0 +1,45 @@
+.noteEditor {
+    background-color: var(--container);
+    max-width: 800px;
+    width: 100%;
+    margin: 0.5em auto;
+    padding: 1em;
+    padding-top: 2em;
+    position: relative;
+    border-radius: 0;
+}
+
+.noteEditor:first-child {
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+}
+
+.noteEditor:last-child {
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+
+.dateSelector {
+    position: absolute;
+    top: 0.25em;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--foreground-faint);
+    cursor: pointer;
+    padding: 0.25em;
+    border-radius: 0.5em;
+    max-width: fit-content;
+    outline: none;
+    text-align: center;
+}
+
+.dateSelector:hover, .dateSelector:focus {
+    background-color: var(--button);
+    color: var(--foreground);
+}
+
+.saveButton {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+}
